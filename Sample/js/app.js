@@ -190,34 +190,82 @@ function renderLoginForm() {
 
 function renderAdminView() {
   mainTitleEl.textContent = "ST3LLAR FØRGE: CMS MASTER CONTROL";
+
   dynamicContentEl.innerHTML = `
-    <div class="bg-[#1D1D30] rounded-lg shadow-xl p-8 border border-fuchsia-500/50">
-      <h2 class="text-3xl font-bold text-sky-400 mb-6">CONTENT BROADCAST SYSTEM</h2>
-      <form id="cmsForm">
-        <input type="text" name="headline" placeholder="Headline" maxlength="100" required class="w-full mb-3 px-4 py-3 rounded bg-gray-800 text-white border border-fuchsia-600">
-        <input type="url" name="imageUrl" placeholder="Image URL" class="w-full mb-3 px-4 py-3 rounded bg-gray-800 text-white border border-fuchsia-600">
-        <textarea name="body" rows="8" placeholder="News Content..." required class="w-full mb-3 px-4 py-3 rounded bg-gray-800 text-white border border-fuchsia-600"></textarea>
+    <div class="bg-[#1D1D30] rounded-xl shadow-2xl p-8 border border-fuchsia-500/50">
+      <!-- HEADER BAR -->
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8">
+        <h2 class="text-3xl font-extrabold text-sky-400 tracking-wide">🛰 CONTENT BROADCAST SYSTEM</h2>
+        <div class="flex flex-wrap gap-3 mt-4 md:mt-0">
+          <button id="viewHomeBtn" class="px-5 py-2 bg-gray-800 border border-sky-500 text-sky-300 font-semibold rounded-full hover:bg-sky-600 hover:text-white transition">
+            VIEW HOME
+          </button>
+          <button id="logoutBtn" class="px-5 py-2 bg-rose-600 text-white font-semibold rounded-full hover:bg-rose-500 transition">
+            LOGOUT
+          </button>
+        </div>
+      </div>
 
-        <!-- ✅ NEW: category dropdown -->
-        <select name="category" required class="w-full mb-4 px-4 py-3 rounded bg-gray-800 text-white border border-fuchsia-600">
-          <option value="" disabled selected>Select category</option>
-          <option value="Announcements">Announcements</option>
-          <option value="Updates">Updates</option>
-          <option value="Events">Events</option>
-          <option value="Highlights">Highlights</option>
-        </select>
+      <!-- FORM -->
+      <form id="cmsForm" class="space-y-4">
+        <div>
+          <label class="block text-gray-300 font-semibold mb-2">Headline</label>
+          <input type="text" name="headline" placeholder="Enter a short catchy headline" maxlength="100" required
+            class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-fuchsia-600 focus:ring-2 focus:ring-fuchsia-400 focus:outline-none">
+        </div>
 
-        <button type="submit" class="w-full px-4 py-4 bg-fuchsia-600 text-white font-bold rounded-xl hover:bg-fuchsia-500">PUBLISH NOW</button>
+        <div>
+          <label class="block text-gray-300 font-semibold mb-2">Image URL</label>
+          <input type="url" name="imageUrl" placeholder="(Optional) Paste an image link"
+            class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-fuchsia-600 focus:ring-2 focus:ring-fuchsia-400 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-2">Content Body</label>
+          <textarea name="body" rows="8" placeholder="Write your content here..." required
+            class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-fuchsia-600 focus:ring-2 focus:ring-fuchsia-400 focus:outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-gray-300 font-semibold mb-2">Category</label>
+          <select name="category" required
+            class="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-fuchsia-600 focus:ring-2 focus:ring-fuchsia-400 focus:outline-none">
+            <option value="" disabled selected>Select a category</option>
+            <option value="Announcements">Announcements</option>
+            <option value="Updates">Updates</option>
+            <option value="Events">Events</option>
+            <option value="Highlights">Highlights</option>
+          </select>
+        </div>
+
+        <div class="pt-4">
+          <button type="submit"
+            class="w-full px-4 py-4 bg-fuchsia-600 text-white font-bold rounded-xl hover:bg-fuchsia-500 shadow-lg transition">
+            🚀 PUBLISH NOW
+          </button>
+        </div>
       </form>
     </div>
   `;
+
+  // Events
   document.getElementById('cmsForm').addEventListener('submit', publishContent);
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut(auth);
+    isLoginFormVisible = false;
+    showMessage("Logged out successfully.", "success");
+  });
+  document.getElementById('viewHomeBtn').addEventListener('click', () => {
+    currentView = 'public';
+    renderApp();
+  });
 }
+
 
 
 function renderPublicView() {
   mainTitleEl.innerHTML = `
-    ST3LLAR FØRGE: FAN HUB
+    BTS BAYUT : FAN HUB
     <button onclick="toggleLoginForm()" class="ml-4 px-3 py-1 text-sm border border-sky-400 text-sky-300 rounded hover:bg-sky-600 hover:text-white transition">
       ${isLoginFormVisible ? "CANCEL" : "ADMIN LOGIN"}
     </button>
